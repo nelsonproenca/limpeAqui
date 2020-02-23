@@ -1,0 +1,7 @@
+{
+  "name": "limpeAquiApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
