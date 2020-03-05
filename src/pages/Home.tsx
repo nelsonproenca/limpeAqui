@@ -42,7 +42,9 @@ const HomePage: React.FC = () => {
         <IonCard className="welcome-card">
           <img src="/assets/Logo.png" alt="logo" style={{ height: 100 }} />
           <IonCardHeader>
-            <IonCardSubtitle>&copy;LimpeAqui - 01/01/2010</IonCardSubtitle>
+            <IonCardSubtitle>
+              &copy;LimpeAqui - (Londrina - PR - Brasil{" "}
+            </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
         <IonList lines="none">
@@ -59,7 +61,7 @@ const HomePage: React.FC = () => {
         >
           <IonCard
             routerDirection="forward"
-            routerLink="/home/login"
+            routerLink="/home/login/1"
             style={{ width: "40%" }}
           >
             <IonCardContent>
@@ -75,7 +77,7 @@ const HomePage: React.FC = () => {
           </IonCard>
           <IonCard
             routerDirection="forward"
-            routerLink="/home/login"
+            routerLink="/home/login/2"
             style={{ width: "40%" }}
           >
             <IonCardContent>
@@ -107,7 +109,7 @@ const HomePage: React.FC = () => {
           </IonCard>
           <IonCard
             routerDirection="forward"
-            routerLink="/home/login"
+            routerLink="/home/login/1"
             style={{ width: "40%" }}
           >
             <IonCardContent>

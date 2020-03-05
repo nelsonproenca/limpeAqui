@@ -72,19 +72,19 @@ const App: React.FC = () => (
           <Route path="/home" component={Home} exact={true} />
           <Route path="/home/duvidas" component={DuvidasPage} exact={true} />
           <Route path="/home/planos" component={PlanosPage} exact={true} />
-          <Route path="/home/login" component={LoginPage} exact={true} />
           <Route
             path="/home/vantagens"
             component={VantagensPage}
             exact={true}
           />
+          <Route path="/home/login/:id" component={LoginPage} exact={true} />
           <Route
-            path="/home/contratante/registro"
+            path="/home/registro/:id"
             component={RegistroPage}
             exact={true}
           />
           <Route
-            path="/home/contratante/bemvindo"
+            path="/home/contratante/bemvindo/:id"
             component={BemVindoPage}
             exact={true}
           />
@@ -129,12 +129,12 @@ const App: React.FC = () => (
             exact={true}
           />
           <Route
-            path="/home/diarista/bemvindo"
+            path="/home/diarista/bemvindo/:id"
             component={BemVindoDiaristaPage}
             exact={true}
           />
           <Route
-            path="/home/diarista/cadastrocomofunciona"
+            path="/home/diarista/cadastrocomofunciona/:id"
             component={CadastroComoFuncionaPage}
             exact={true}
           />

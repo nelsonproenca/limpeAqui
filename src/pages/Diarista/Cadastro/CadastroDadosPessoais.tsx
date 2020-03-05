@@ -19,9 +19,55 @@ import {
   IonRadioGroup
 } from "@ionic/react";
 import { arrowBack, arrowForward } from "ionicons/icons";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { DiaristaCadastro } from "../../../interfaces/DiaristaCadastro";
+import DiaristasService from "../../../services/DiaristasService";
+import { RouteComponentProps } from "react-router";
 
-const CadastroDadosPessoaisPage: React.FC = () => {
+interface DiaristaDetalhesPageProps
+  extends RouteComponentProps<{
+    id: string;
+  }> {}
+
+const CadastroDadosPessoaisPage: React.FC<DiaristaDetalhesPageProps> = ({
+  match
+}) => {
+  const [nomeCompleto, setNomeCompleto] = useState();
+  const [celular, setCelular] = useState();
+  const [email, setEmail] = useState();
+  const [dataNascimento, setDataNascimento] = useState();
+  const [contaBancaria, setContaBancaria] = useState();
+  const [internetCelular, setInternetCelular] = useState();
+  const [cep, setCep] = useState();
+  const [endereco, setEndereco] = useState();
+  const [numero, setNumero] = useState();
+  const [cidade, setCidade] = useState();
+  const [estado, setEstado] = useState();
+
+  useEffect(() => {
+    const carregarDados = () => DiaristasService.load();
+  });
+
+  const handleOnclickNext = () => gravarParcial({});
+
+  const gravarParcial = (diaristaCadastro: DiaristaCadastro) => {
+    diaristaCadastro = {
+      nome: nomeCompleto,
+      celular,
+      email,
+      dataNascimento,
+      contaBancariaSeuNome: contaBancaria,
+      acessoInternetCelular: internetCelular,
+      cep,
+      endereco,
+      numero,
+      cidade,
+      estado
+    };
+
+    DiaristasService.save(diaristaCadastro);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -68,7 +114,7 @@ const CadastroDadosPessoaisPage: React.FC = () => {
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Data de Nascimento</IonLabel>
-            <IonInput type="number" placeholder="Ex. 030"></IonInput>
+            <IonInput type="date" placeholder="Ex. 030"></IonInput>
           </IonItem>
           <IonItem>
             <IonLabel class="ion-text-wrap" position="stacked">

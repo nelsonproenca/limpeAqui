@@ -3,17 +3,15 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonMenuButton,
   IonPage,
   IonTitle,
   IonToolbar,
   IonLabel,
-  IonCard,
   IonItem,
   IonButton,
   IonBadge
 } from "@ionic/react";
-import { today, calendar } from "ionicons/icons";
+import { today, calendar, arrowBack } from "ionicons/icons";
 import React from "react";
 
 const AgendaPage: React.FC = () => {
@@ -22,7 +20,12 @@ const AgendaPage: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonMenuButton />
+            <IonButton
+              routerLink="/home/diarista/bemvindo"
+              routerDirection="back"
+            >
+              <IonIcon icon={arrowBack}></IonIcon>
+            </IonButton>
           </IonButtons>
           <IonTitle>Agenda</IonTitle>
         </IonToolbar>

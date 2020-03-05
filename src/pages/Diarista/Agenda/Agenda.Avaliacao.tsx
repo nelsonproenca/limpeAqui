@@ -25,7 +25,7 @@ const AgendaAvaliacaoPage: React.FC = () => {
         <IonToolbar>
           <IonButtons slot="start">
             <IonButton
-              routerLink="/home/diarista/agenda"
+              routerLink="/home/diarista/agenda/realizados"
               routerDirection="back"
             >
               <IonIcon icon={arrowBack}></IonIcon>

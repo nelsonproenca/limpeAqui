@@ -13,16 +13,50 @@ import {
   IonItem,
   IonAvatar
 } from "@ionic/react";
-import { personAdd, document, today, chatbubbles } from "ionicons/icons";
-import React from "react";
+import {
+  personAdd,
+  document,
+  today,
+  chatbubbles,
+  arrowBack
+} from "ionicons/icons";
+import React, { useEffect, useState } from "react";
+import { RouteComponentProps } from "react-router";
+import DiaristasService from "../../services/DiaristasService";
+import { BemVindo } from "../../interfaces/BemVindo";
 
-const BemVindoDiaristaPage: React.FC = () => {
+interface DiaristaDetalhesPageProps
+  extends RouteComponentProps<{
+    Id: string;
+  }> {}
+
+const BemVindoDiaristaPage: React.FC<DiaristaDetalhesPageProps> = ({
+  match
+}) => {
+  const [diarista, setDiarista] = useState<BemVindo>();
+  const [diaristaId, setDiaristaId] = useState(match.params.Id);
+
+  useEffect(() => {
+    async function carregarDados() {
+      await DiaristasService.getOne(diaristaId).then(result => {
+        setDiarista(result);
+      });
+    }
+
+    carregarDados();
+  }, []);
+
+  const urlFoto =
+    "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonMenuButton />
+            <IonButton routerLink="/home/login" routerDirection="back">
+              <IonIcon icon={arrowBack}></IonIcon>
+            </IonButton>
           </IonButtons>
           <IonTitle>Bem Vindo</IonTitle>
         </IonToolbar>
@@ -39,21 +73,21 @@ const BemVindoDiaristaPage: React.FC = () => {
             <IonAvatar slot="start" style={{ width: 64, height: 64 }}>
               <img
                 alt="foto"
-                src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
+                src={diarista?.foto.length === 0 ? urlFoto : diarista?.foto}
               />
             </IonAvatar>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <IonLabel style={{ marginBottom: "7px" }}>
-                <h1>Olá, Usuário !!!</h1>
+                <h1>Olá, {diarista?.diaristaNome} !!!</h1>
               </IonLabel>
               <IonLabel style={{ marginBottom: "5px" }}>
-                <h4>Ultimo trabalho em 99/99/9999</h4>
+                <h4>Ultimo trabalho em {diarista?.dataServico}</h4>
               </IonLabel>
               <IonLabel style={{ marginBottom: "5px" }}>
-                <h4>Cliente: Maria da Silva</h4>
+                <h4>Cliente: {diarista?.contratanteNome}</h4>
               </IonLabel>
               <IonLabel style={{ marginBottom: "px" }}>
-                <h4>Valor: 999,99</h4>
+                <h4>Valor: {diarista?.valorServico}</h4>
               </IonLabel>
             </div>
           </IonItem>
@@ -71,7 +105,7 @@ const BemVindoDiaristaPage: React.FC = () => {
               height: 70,
               textAlign: "left"
             }}
-            routerLink="/home/diarista/cadastrocomofunciona"
+            routerLink={`/home/diarista/cadastrocomofunciona/${match.params.Id}`}
             routerDirection="forward"
           >
             <IonIcon
@@ -99,7 +133,7 @@ const BemVindoDiaristaPage: React.FC = () => {
               height: 70,
               textAlign: "left"
             }}
-            routerLink="/home/diarista/agenda"
+            routerLink={`/home/diarista/agenda/${match.params.Id}`}
             routerDirection="forward"
           >
             <IonIcon

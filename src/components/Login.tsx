@@ -15,12 +15,66 @@ import {
   IonToolbar,
   IonButton,
   IonItem,
-  IonInput
+  IonInput,
+  IonAlert,
+  IonCardTitle,
+  IonCardContent
 } from "@ionic/react";
 import { logoFacebook, logoGoogle, logIn } from "ionicons/icons";
-import React from "react";
+import React, { useState } from "react";
+import { RouteComponentProps } from "react-router";
+import UsuariosService from "../services/UsuariosService";
+import { RegistroUsuario } from "../interfaces/RegistroUsuario";
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps
+  extends RouteComponentProps<{
+    id: string;
+  }> {}
+
+const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
+  const handleEntrarClick = (login: string, senha: string) => {
+    if (
+      login === undefined ||
+      senha === undefined ||
+      login.trim().length === 0 ||
+      senha.trim().length === 0
+    ) {
+      setErro(true);
+      setMensagemErro("Usuario/Senha não podem ser vazio.");
+      setSenha("");
+      setUsuario("");
+      return;
+    }
+    buscarUsuario(login, senha);
+  };
+
+  const buscarUsuario = (login: string, senha: string) => {
+    let usuarios: RegistroUsuario[] = [];
+
+    UsuariosService.load().then(result => {
+      usuarios = result;
+      if (usuarios.length > 1) {
+        usuarios.map(usuario => {
+          if (usuario.usuario === login && usuario.senha === senha) {
+            if (usuario.tipo === 1) {
+              history.push(`/home/contratante/bemvindo/${usuario.id}`);
+            } else if (usuario.tipo === 2) {
+              history.push(`/home/diarista/bemvindo/${usuario.id}`);
+            }
+          }
+        });
+      } else {
+        alert("Usuario/Senha não encontrado.");
+      }
+      return;
+    });
+  };
+
+  const [usuario, setUsuario] = useState();
+  const [senha, setSenha] = useState();
+  const [erro, setErro] = useState(false);
+  const [mensagemErro, setMensagemErro] = useState();
+
   return (
     <IonPage>
       <IonHeader>
@@ -32,6 +86,13 @@ const LoginPage: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonAlert
+          isOpen={erro}
+          onDidDismiss={() => setErro(false)}
+          header={"Erro"}
+          message={mensagemErro}
+          buttons={["OK"]}
+        />
         <IonCard>
           <IonCardHeader>
             <IonCardSubtitle>Faça seu login</IonCardSubtitle>
@@ -42,13 +103,21 @@ const LoginPage: React.FC = () => {
               <IonInput
                 type="text"
                 placeholder="Entre com seu usuário."
+                value={usuario}
+                onIonChange={e => {
+                  setUsuario(e.detail.value);
+                }}
               ></IonInput>
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">Senha:</IonLabel>
               <IonInput
-                type="text"
+                type="password"
                 placeholder="Entre com sua senha."
+                value={senha}
+                onIonChange={e => {
+                  setSenha(e.detail.value);
+                }}
               ></IonInput>
             </IonItem>
             <IonItem>
@@ -56,33 +125,23 @@ const LoginPage: React.FC = () => {
                 size="default"
                 color="warning"
                 expand="block"
-                routerDirection="forward"
-                routerLink="/home/contratante/bemvindo"
                 style={{ fontSize: "1.3rem", width: "100%", height: 50 }}
+                onClick={() => {
+                  handleEntrarClick(usuario, senha);
+                }}
               >
                 <IonIcon icon={logIn} slot="start"></IonIcon>
-                <IonLabel style={{ fontSize: "0.85rem" }}>
-                  Entrar Contratante
-                </IonLabel>
+                <IonLabel style={{ fontSize: "0.85rem" }}>Entrar</IonLabel>
               </IonButton>
             </IonItem>
             <IonItem>
               <IonButton
-                size="default"
-                color="warning"
-                expand="block"
-                routerDirection="forward"
-                routerLink="/home/diarista/bemvindo"
-                style={{ fontSize: "1.3rem", width: "100%", height: 50 }}
+                slot="end"
+                size="small"
+                color="light"
+                routerDirection="back"
+                routerLink={`/home/registro/${match.params.id}`}
               >
-                <IonIcon icon={logIn} slot="start"></IonIcon>
-                <IonLabel style={{ fontSize: "0.85rem" }}>
-                  Entrar Diarista
-                </IonLabel>
-              </IonButton>
-            </IonItem>
-            <IonItem>
-              <IonButton slot="end" size="small" color="light">
                 <IonLabel>Registre-se</IonLabel>
               </IonButton>
             </IonItem>

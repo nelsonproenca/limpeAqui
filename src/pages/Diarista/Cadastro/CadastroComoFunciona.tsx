@@ -10,25 +10,52 @@ import {
   IonToolbar,
   IonButton,
   IonItem,
-  IonMenuButton,
   IonToggle,
   IonText
 } from "@ionic/react";
-import { arrowForward } from "ionicons/icons";
+import { arrowForward, arrowBack } from "ionicons/icons";
 import React, { useState } from "react";
+import { DiaristaCadastro } from "../../../interfaces/DiaristaCadastro";
+import DiaristasService from "../../../services/DiaristasService";
+import { RouteComponentProps } from "react-router";
 
-const CadastroComoFuncionaPage: React.FC = () => {
+interface DiaristaDetalhesPageProps
+  extends RouteComponentProps<{
+    id: string;
+  }> {}
+
+const CadastroComoFuncionaPage: React.FC<DiaristaDetalhesPageProps> = ({
+  match
+}) => {
   const textoComoFunciona =
     "Como funciona: Nós da Limpe Aqui temos como objetivo, conectar profissionais autônomos da limpeza com pessoas que necessitam de serviços de limpeza de maneira prática e rápida. O profissional que se interessar em trabalhar conosco, consegue atingir dependendo de sua disponibilidade mais do que R$ 2.000,00 por mês. A cliente contrata por hora o serviço. A profissional ganha por hora trabalhada R$ 15,00, a(o) profissional não tem nenhum vínculo empregatício com a Limpe Aqui, nós apenas somos os facilitadores, oferecendo mais serviços aos profissionais. ";
 
   const [trabalho, setTrabalho] = useState(false);
+  const [vinculo, setVinculo] = useState(false);
+
+  const handleOnclickNext = () => gravarParcial();
+
+  const gravarParcial = () => {
+    let diaristaCadastro: DiaristaCadastro = {
+      semVinculoEmpregaticio: vinculo,
+      limpeAquiLondrina: trabalho,
+      id: match.params.id
+    };
+
+    DiaristasService.save(diaristaCadastro);
+  };
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonMenuButton />
+            <IonButton
+              routerLink="/home/diarista/bemvindo"
+              routerDirection="back"
+            >
+              <IonIcon icon={arrowBack}></IonIcon>
+            </IonButton>
           </IonButtons>
           <IonTitle>Cadastro</IonTitle>
           <IonButtons slot="end" color="secundary">
@@ -36,6 +63,9 @@ const CadastroComoFuncionaPage: React.FC = () => {
               routerDirection="forward"
               routerLink="/home/diarista/cadastrodadospessoais"
               disabled={!trabalho}
+              onClick={e => {
+                handleOnclickNext();
+              }}
             >
               <IonIcon icon={arrowForward} slot="end"></IonIcon>
               <IonLabel>1 de 8</IonLabel>
@@ -65,7 +95,12 @@ const CadastroComoFuncionaPage: React.FC = () => {
               empregatício?
               <IonText color="danger">*</IonText>
             </IonLabel>
-            <IonToggle slot="end"></IonToggle>
+            <IonToggle
+              slot="end"
+              onIonChange={e => {
+                setVinculo(e.detail.checked);
+              }}
+            ></IonToggle>
           </IonItem>
           <IonItem lines="none">
             <IonLabel class="ion-text-wrap" style={{ fontSize: "0.85rem" }}>

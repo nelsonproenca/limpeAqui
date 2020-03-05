@@ -14,27 +14,103 @@ import {
   IonButton,
   IonItem,
   IonInput,
-  IonCardTitle
+  IonCardTitle,
+  IonAlert
 } from "@ionic/react";
-import { create, logIn, document } from "ionicons/icons";
-import React from "react";
+import { logIn, document, save, arrowBack } from "ionicons/icons";
+import React, { useState } from "react";
+import { RegistroUsuario } from "../interfaces/RegistroUsuario";
+import UsuariosService from "../services/UsuariosService";
+import { v4 as uuidv4 } from "uuid";
+import { RouteComponentProps } from "react-router-dom";
 
-const RegistroPage: React.FC = () => {
+interface LoginPageProps
+  extends RouteComponentProps<{
+    id: string;
+  }> {}
+
+const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
+  const [usuario, setUsuario] = useState("");
+  const [senha, setSenha] = useState("");
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [celular, setCelular] = useState("");
+  const [erro, setErro] = useState(false);
+  const [mensagemErro, setMensagemErro] = useState();
+
+  const handleUsuarioClick = (e: CustomEvent) => {
+    setUsuario(e.detail.value);
+  };
+
+  const handleSenhaClick = (e: CustomEvent) => {
+    setSenha(e.detail.value);
+  };
+
+  const handleNomeClick = (e: CustomEvent) => {
+    setNome(e.detail.value);
+  };
+
+  const handleEmailClick = (e: CustomEvent) => {
+    setEmail(e.detail.value);
+  };
+
+  const handleCelularClick = (e: CustomEvent) => {
+    setCelular(e.detail.value);
+  };
+
+  const handleSalvarClick = () => {
+    let novoUsuario: RegistroUsuario = {
+      usuario,
+      senha,
+      nome,
+      email,
+      celular,
+      tipo: Number(match.params.id),
+      id: uuidv4()
+    };
+
+    salvar(novoUsuario);
+    limpar();
+  };
+
+  const salvar = (usuario: RegistroUsuario) => {
+    UsuariosService.save(usuario).then(result => {
+      setMensagemErro(result);
+    });
+  };
+
+  const limpar = () => {
+    setUsuario("");
+    setSenha("");
+    setNome("");
+    setEmail("");
+    setCelular("");
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonMenuButton />
+            <IonButton routerLink="/home/login" routerDirection="back">
+              <IonIcon icon={arrowBack}></IonIcon>
+            </IonButton>
           </IonButtons>
           <IonTitle>Registro</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonAlert
+          isOpen={erro}
+          onDidDismiss={() => setErro(false)}
+          header={"Erro"}
+          message={mensagemErro}
+          buttons={["OK"]}
+        />
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>
-              <IonItem lines="none" style={{ textAlign: "right" }}>
+              <IonItem lines="full" style={{ textAlign: "right" }}>
                 <IonIcon
                   icon={logIn}
                   slot="end"
@@ -49,21 +125,25 @@ const RegistroPage: React.FC = () => {
               <IonLabel position="stacked">Usuário:</IonLabel>
               <IonInput
                 type="text"
+                value={usuario}
                 placeholder="Entre com seu usuário."
+                onIonChange={handleUsuarioClick}
               ></IonInput>
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">Senha:</IonLabel>
               <IonInput
-                type="text"
+                type="password"
+                value={senha}
                 placeholder="Entre com sua senha."
+                onIonChange={handleSenhaClick}
               ></IonInput>
             </IonItem>
           </IonList>
         </IonCard>
         <IonCard>
           <IonCardHeader>
-            <IonItem lines="none" style={{ textAlign: "right" }}>
+            <IonItem lines="full" style={{ textAlign: "right" }}>
               <IonIcon
                 icon={document}
                 slot="end"
@@ -77,21 +157,28 @@ const RegistroPage: React.FC = () => {
               <IonLabel position="stacked">Nome:</IonLabel>
               <IonInput
                 type="text"
+                value={nome}
                 placeholder="Entre com seu nome."
+                onIonChange={handleNomeClick}
               ></IonInput>
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">E-mail:</IonLabel>
               <IonInput
-                type="text"
+                type="email"
+                value={email}
                 placeholder="Entre com sua e-mail."
+                onIonChange={handleEmailClick}
               ></IonInput>
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">Celular:</IonLabel>
               <IonInput
-                type="text"
+                type="tel"
+                value={celular}
                 placeholder="Entre com seu celular."
+                pattern="^\d{3}\w\d{3}\w\d{3}"
+                onIonChange={handleCelularClick}
               ></IonInput>
             </IonItem>
           </IonList>
@@ -99,14 +186,15 @@ const RegistroPage: React.FC = () => {
         <IonItem lines="none">
           <IonButton
             size="default"
-            color="warning"
+            color="success"
             expand="block"
             style={{ fontSize: "1.3rem", width: "100%" }}
-            routerDirection="forward"
-            routerLink="/home/contratante/login"
+            onClick={() => {
+              handleSalvarClick();
+            }}
           >
-            <IonIcon icon={create} slot="end"></IonIcon>
-            <IonLabel style={{ fontSize: "1.2rem" }}>Salvar</IonLabel>
+            <IonIcon icon={save} slot="end"></IonIcon>
+            <IonLabel style={{ fontSize: "1rem" }}>Salvar</IonLabel>
           </IonButton>
         </IonItem>
       </IonContent>
