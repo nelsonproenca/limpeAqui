@@ -30,7 +30,8 @@ interface DiaristaDetalhesPageProps
   }> {}
 
 const CadastroDadosPessoaisPage: React.FC<DiaristaDetalhesPageProps> = ({
-  match
+  match,
+  history
 }) => {
   const [nomeCompleto, setNomeCompleto] = useState();
   const [celular, setCelular] = useState();
@@ -43,14 +44,18 @@ const CadastroDadosPessoaisPage: React.FC<DiaristaDetalhesPageProps> = ({
   const [numero, setNumero] = useState();
   const [cidade, setCidade] = useState();
   const [estado, setEstado] = useState();
+  const [diarista, setDiarista] = useState<DiaristaCadastro>();
 
   useEffect(() => {
-    const carregarDados = () => DiaristasService.load();
-  });
+    const CarregarDados = () =>
+      DiaristasService.get(match.params.id).then(result => setDiarista(result));
 
-  const handleOnclickNext = () => gravarParcial({});
+    CarregarDados();
+  }, []);
 
-  const gravarParcial = (diaristaCadastro: DiaristaCadastro) => {
+  const handleOnClickNext = () => gravarParcial(diarista);
+
+  const gravarParcial = (diaristaCadastro?: DiaristaCadastro) => {
     diaristaCadastro = {
       nome: nomeCompleto,
       celular,
@@ -65,8 +70,25 @@ const CadastroDadosPessoaisPage: React.FC<DiaristaDetalhesPageProps> = ({
       estado
     };
 
-    DiaristasService.save(diaristaCadastro);
+    DiaristasService.saveLocal(diaristaCadastro);
   };
+
+  const handleOnChangeNome = (e: CustomEvent) =>
+    setNomeCompleto(e.detail.value);
+  const handleOnChangeEmail = (e: CustomEvent) => setEmail(e.detail.value);
+  const handleOnChangeCelular = (e: CustomEvent) => setCelular(e.detail.value);
+  const handleOnChangeDataNascimento = (e: CustomEvent) =>
+    setDataNascimento(e.detail.value);
+  const handleOnChangeContaBancaria = (e: CustomEvent) =>
+    setContaBancaria(e.detail.value);
+  const handleOnChangeInternetCelular = (e: CustomEvent) =>
+    setInternetCelular(e.detail.value);
+  const handleOnChangeCep = (e: CustomEvent) => setCep(e.detail.value);
+  const handleOnChangeEndereco = (e: CustomEvent) =>
+    setEndereco(e.detail.value);
+  const handleOnChangeNumero = (e: CustomEvent) => setNumero(e.detail.value);
+  const handleOnChangeCidade = (e: CustomEvent) => setCidade(e.detail.value);
+  const handleOnChangeEstado = (e: CustomEvent) => setEstado(e.detail.value);
 
   return (
     <IonPage>
@@ -74,7 +96,7 @@ const CadastroDadosPessoaisPage: React.FC<DiaristaDetalhesPageProps> = ({
         <IonToolbar>
           <IonButtons slot="start">
             <IonButton
-              routerLink="/home/diarista/cadastrocomofunciona"
+              routerLink="/home/diarista/cadastrocomofunciona/"
               routerDirection="back"
             >
               <IonIcon icon={arrowBack}></IonIcon>
@@ -85,6 +107,7 @@ const CadastroDadosPessoaisPage: React.FC<DiaristaDetalhesPageProps> = ({
             <IonButton
               routerDirection="forward"
               routerLink="/home/diarista/cadastrooutrosdados"
+              onClick={handleOnClickNext}
             >
               <IonIcon icon={arrowForward} slot="end"></IonIcon>
               <IonLabel>2 de 8</IonLabel>
@@ -102,25 +125,37 @@ const CadastroDadosPessoaisPage: React.FC<DiaristaDetalhesPageProps> = ({
         <IonCard>
           <IonItem>
             <IonLabel position="stacked">Nome Completo:</IonLabel>
-            <IonInput type="text"></IonInput>
+            <IonInput type="text" onIonChange={handleOnChangeNome}></IonInput>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Celular (WhatsApp):</IonLabel>
-            <IonInput type="text" placeholder="Ex. (11) 99999-9999"></IonInput>
+            <IonInput
+              type="text"
+              placeholder="Ex. (11) 99999-9999"
+              onIonChange={handleOnChangeCelular}
+            ></IonInput>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">E~mail</IonLabel>
-            <IonInput type="text" placeholder="Ex. boo@contoso.com"></IonInput>
+            <IonInput
+              type="text"
+              placeholder="Ex. boo@contoso.com"
+              onIonChange={handleOnChangeEmail}
+            ></IonInput>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Data de Nascimento</IonLabel>
-            <IonInput type="date" placeholder="Ex. 030"></IonInput>
+            <IonInput
+              type="date"
+              placeholder="Ex. 99/99/9999"
+              onIonChange={handleOnChangeDataNascimento}
+            ></IonInput>
           </IonItem>
           <IonItem>
             <IonLabel class="ion-text-wrap" position="stacked">
               Tem conta bancária em seu nome?
             </IonLabel>
-            <IonToggle slot="end" />
+            <IonToggle slot="end" onIonChange={handleOnChangeContaBancaria} />
           </IonItem>
           <IonItem lines="none">
             <IonLabel class="ion-text-wrap" position="stacked">
@@ -129,22 +164,25 @@ const CadastroDadosPessoaisPage: React.FC<DiaristaDetalhesPageProps> = ({
             </IonLabel>
           </IonItem>
           <IonItem lines="none">
-            <IonRadioGroup value="biff">
+            <IonRadioGroup
+              value="1"
+              onIonChange={handleOnChangeInternetCelular}
+            >
               <IonItem lines="none">
                 <IonLabel>Sim, só o wifi</IonLabel>
-                <IonRadio slot="start" value="biff" />
+                <IonRadio slot="start" value="1" />
               </IonItem>
               <IonItem lines="none">
                 <IonLabel>Sim, só 3G/4G</IonLabel>
-                <IonRadio slot="start" value="griff" />
+                <IonRadio slot="start" value="2" />
               </IonItem>
               <IonItem lines="none">
                 <IonLabel>Sim, wifi e 3G/4G</IonLabel>
-                <IonRadio slot="start" value="buford" />
+                <IonRadio slot="start" value="3" />
               </IonItem>
               <IonItem lines="none">
                 <IonLabel>Não tenho acesso</IonLabel>
-                <IonRadio slot="start" value="buford" />
+                <IonRadio slot="start" value="4" />
               </IonItem>
             </IonRadioGroup>
           </IonItem>
@@ -156,23 +194,32 @@ const CadastroDadosPessoaisPage: React.FC<DiaristaDetalhesPageProps> = ({
           </IonCardHeader>
           <IonItem>
             <IonLabel position="stacked">CEP:</IonLabel>
-            <IonInput type="text"></IonInput>
+            <IonInput type="text" onIonChange={handleOnChangeCep}></IonInput>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Endereço(Rua e Bairro ):</IonLabel>
-            <IonInput type="text"></IonInput>
+            <IonInput
+              type="text"
+              onIonChange={handleOnChangeEndereco}
+            ></IonInput>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Endereço(Numero):</IonLabel>
-            <IonInput type="text"></IonInput>
+            <IonInput
+              type="number"
+              onIonChange={handleOnChangeNumero}
+            ></IonInput>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Cidade</IonLabel>
-            <IonInput type="text"></IonInput>
+            <IonInput type="text" onIonChange={handleOnChangeCidade}></IonInput>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">Estado</IonLabel>
-            <IonInput type="number"></IonInput>
+            <IonInput
+              type="number"
+              onIonChange={handleOnChangeEstado}
+            ></IonInput>
           </IonItem>
         </IonCard>
       </IonContent>

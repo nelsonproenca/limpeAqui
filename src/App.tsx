@@ -8,6 +8,8 @@ import Menu from "./components/Menu";
 import Home from "./pages/Home";
 import { home } from "ionicons/icons";
 
+import dotenv from "dotenv";
+
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 
@@ -54,6 +56,8 @@ import CadastroDocumentosPage from "./pages/Diarista/Cadastro/CadastroDocumentos
 import AgendaAvaliacaoPage from "./pages/Diarista/Agenda/Agenda.Avaliacao";
 import ContratanteDadosPage from "./pages/Contratante/ContratanteDados";
 import IndiquePage from "./pages/Indique/Indique";
+
+dotenv.config();
 
 const appPages: AppPage[] = [
   {

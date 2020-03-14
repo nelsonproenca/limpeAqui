@@ -1,5 +1,5 @@
 class DiaristasService {
-  static load() {
+  static loadLocal() {
     return new Promise((resolve, reject) => {
       debugger;
       try {
@@ -11,6 +11,7 @@ class DiaristasService {
       }
     });
   }
+
   static get(diaristaId) {
     return new Promise((resolve, reject) => {
       try {
@@ -20,10 +21,8 @@ class DiaristasService {
         let diarista = null;
 
         if (Array(diaristas).length > 0) {
-          Array(diaristas).map(result => {
-            if (result.id === diaristaId) {
-              diarista = result;
-            }
+          diarista = Array(diaristas).map(result => {
+            return result.id === diaristaId ? result : null;
           });
         }
 
@@ -33,6 +32,7 @@ class DiaristasService {
       }
     });
   }
+
   static getOne(diaristaId) {
     return new Promise((resolve, reject) => {
       debugger;
@@ -47,30 +47,30 @@ class DiaristasService {
         let diaristas = diaristasData ? JSON.parse(diaristasData) : [];
 
         if (Array(diaristas).length > 0) {
-          Array(diaristas).map(result => {
-            if (result.id === diaristaId) {
-              diarista = result;
-            }
+          diarista = Array(diaristas).map(result => {
+            return result.id === diaristaId ? result : null;
           });
         }
 
         if (Array(pedidos).length > 0) {
-          Array(pedidos).map(result => {
-            if (result.diaristaId === diaristaId) {
-              pedido = result;
-            }
+          pedido = Array(pedidos).map(result => {
+            return result.diaristaId === diaristaId ? result : null;
           });
         }
 
-        bemVindo = {
-          diaristaId: diarista.id,
-          diaristaNome: diarista.nome,
-          contratanteId: pedido.contratanteId,
-          contratanteNome: pedido.contratanteNome,
-          foto: diarista.foto,
-          dataServico: pedido.dataServico,
-          valorServico: pedido.valorServico
-        };
+        if (diaristaId <= 0) {
+          const diaristasData = window.localStorage.getItem("Usuarios");
+        } else {
+          bemVindo = {
+            diaristaId: diarista.id,
+            diaristaNome: diarista.nome,
+            contratanteId: pedido.contratanteId,
+            contratanteNome: pedido.contratanteNome,
+            foto: diarista.foto,
+            dataServico: pedido.dataServico,
+            valorServico: pedido.valorServico
+          };
+        }
 
         resolve(bemVindo);
       } catch (error) {
@@ -79,7 +79,7 @@ class DiaristasService {
     });
   }
 
-  static save(diarista) {
+  static saveLocal(diarista) {
     return new Promise((resolve, reject) => {
       try {
         window.localStorage.setItem("Diaristas", JSON.stringify(diarista));

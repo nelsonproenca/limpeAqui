@@ -1,0 +1,23 @@
+{
+  "name": "limpeaquiapi",
+  "version": "1.0.0",
+  "description": "API para uso no LimpeAquiApp",
+  "main": "config.js",
+  "scripts": {
+    "start": "nodemon index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.io"
+  },
+  "author": "Nelson Proença",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.4",
+    "mongoose": "^5.9.3",
+    "uuid": "^7.0.2"
+  }
+}

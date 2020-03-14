@@ -1,11 +1,16 @@
 class UsuariosService {
   static load() {
     return new Promise((resolve, reject) => {
-      debugger;
       try {
         const usuarios = window.localStorage.getItem("Usuarios");
+        let listaUsuarios = [];
+        let lista = JSON.parse(usuarios);
 
-        resolve(usuarios ? JSON.parse(usuarios) : []);
+        if (usuarios) {
+          listaUsuarios.push(lista);
+        }
+
+        resolve(listaUsuarios);
       } catch (error) {
         reject(error);
       }

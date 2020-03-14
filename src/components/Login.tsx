@@ -28,7 +28,7 @@ import { RegistroUsuario } from "../interfaces/RegistroUsuario";
 
 interface LoginPageProps
   extends RouteComponentProps<{
-    id: string;
+    tipo: string;
   }> {}
 
 const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
@@ -52,14 +52,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
     let usuarios: RegistroUsuario[] = [];
 
     UsuariosService.load().then(result => {
+      debugger;
       usuarios = result;
-      if (usuarios.length > 1) {
-        usuarios.map(usuario => {
-          if (usuario.usuario === login && usuario.senha === senha) {
-            if (usuario.tipo === 1) {
-              history.push(`/home/contratante/bemvindo/${usuario.id}`);
+      if (usuarios.length > 0) {
+        usuarios.map((user, index) => {
+          if (user.usuario === login && user.senha === senha) {
+            if (user.tipo === 1) {
+              history.push(`/home/diarista/bemvindo/${user.id}`);
             } else if (usuario.tipo === 2) {
-              history.push(`/home/diarista/bemvindo/${usuario.id}`);
+              history.push(`/home/contratante/bemvindo/${user.id}`);
             }
           }
         });
@@ -140,7 +141,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
                 size="small"
                 color="light"
                 routerDirection="back"
-                routerLink={`/home/registro/${match.params.id}`}
+                routerLink={`/home/registro/${match.params.tipo}`}
               >
                 <IonLabel>Registre-se</IonLabel>
               </IonButton>

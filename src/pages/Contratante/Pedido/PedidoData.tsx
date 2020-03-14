@@ -10,12 +10,19 @@ import {
   IonToolbar,
   IonButton,
   IonItem,
-  IonDatetime
+  IonDatetime,
+  IonInput
 } from "@ionic/react";
 import { arrowBack, arrowForward } from "ionicons/icons";
 import React, { useState } from "react";
+import { RouteComponentProps } from "react-router";
 
-const PedidoDataPage: React.FC = () => {
+interface PedidosPageProps
+  extends RouteComponentProps<{
+    id: string;
+  }> {}
+
+const PedidoDataPage: React.FC<PedidosPageProps> = ({ match, history }) => {
   const [dia, setDia] = useState(0);
   const [mes, setMes] = useState("");
   const [ano, setAno] = useState(0);
@@ -33,6 +40,11 @@ const PedidoDataPage: React.FC = () => {
     "novembro",
     "dezembro"
   ];
+
+  const handleClickNext = () => {
+    history.push("/home/contratante/pedidoservico");
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -47,10 +59,7 @@ const PedidoDataPage: React.FC = () => {
           </IonButtons>
           <IonTitle>Pedido</IonTitle>
           <IonButtons slot="end" color="secundary">
-            <IonButton
-              routerDirection="forward"
-              routerLink="/home/contratante/pedidoservico"
-            >
+            <IonButton onClick={handleClickNext}>
               <IonIcon icon={arrowForward} slot="end"></IonIcon>
               <IonLabel>2 de 7</IonLabel>
             </IonButton>
@@ -78,7 +87,6 @@ const PedidoDataPage: React.FC = () => {
                     text: "Selecionar",
                     handler: ({ day, month, year }) => {
                       let mes = month.value;
-
                       let nomeMes = meses[mes - 1 < 0 ? 0 : mes - 1];
 
                       setAno(year.value);
@@ -88,7 +96,8 @@ const PedidoDataPage: React.FC = () => {
                   },
                   {
                     text: "Cancelar",
-                    handler: () => {
+                    handler: e => {
+                      console.log(e);
                       console.log("Clicked Log. Do not Dismiss.");
                     }
                   }
@@ -108,6 +117,14 @@ const PedidoDataPage: React.FC = () => {
           <IonCard>
             <IonItem lines="none" style={{ textAlign: "center" }}>
               <IonLabel style={{ fontSize: "5rem" }}>{dia}</IonLabel>
+            </IonItem>
+          </IonCard>
+          <IonCard>
+            <IonItem lines="none" style={{ textAlign: "center" }}>
+              <IonLabel>A partir das </IonLabel>
+            </IonItem>
+            <IonItem lines="none" style={{ textAlign: "center" }}>
+              <IonInput type="time" style={{ fontSize: "3rem" }} />
             </IonItem>
           </IonCard>
         </IonCard>

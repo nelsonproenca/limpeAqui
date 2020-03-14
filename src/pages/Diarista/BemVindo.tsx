@@ -5,7 +5,6 @@ import {
   IonHeader,
   IonIcon,
   IonLabel,
-  IonMenuButton,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -34,16 +33,16 @@ const BemVindoDiaristaPage: React.FC<DiaristaDetalhesPageProps> = ({
   match
 }) => {
   const [diarista, setDiarista] = useState<BemVindo>();
-  const [diaristaId, setDiaristaId] = useState(match.params.Id);
 
   useEffect(() => {
-    async function carregarDados() {
-      await DiaristasService.getOne(diaristaId).then(result => {
+    async function carregarDados(id: string) {
+      debugger;
+      await DiaristasService.getOne(id).then(result => {
         setDiarista(result);
       });
     }
 
-    carregarDados();
+    carregarDados(match.params.Id);
   }, []);
 
   const urlFoto =

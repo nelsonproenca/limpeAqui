@@ -25,7 +25,8 @@ interface DiaristaDetalhesPageProps
   }> {}
 
 const CadastroComoFuncionaPage: React.FC<DiaristaDetalhesPageProps> = ({
-  match
+  match,
+  history
 }) => {
   const textoComoFunciona =
     "Como funciona: Nós da Limpe Aqui temos como objetivo, conectar profissionais autônomos da limpeza com pessoas que necessitam de serviços de limpeza de maneira prática e rápida. O profissional que se interessar em trabalhar conosco, consegue atingir dependendo de sua disponibilidade mais do que R$ 2.000,00 por mês. A cliente contrata por hora o serviço. A profissional ganha por hora trabalhada R$ 15,00, a(o) profissional não tem nenhum vínculo empregatício com a Limpe Aqui, nós apenas somos os facilitadores, oferecendo mais serviços aos profissionais. ";
@@ -33,7 +34,10 @@ const CadastroComoFuncionaPage: React.FC<DiaristaDetalhesPageProps> = ({
   const [trabalho, setTrabalho] = useState(false);
   const [vinculo, setVinculo] = useState(false);
 
-  const handleOnclickNext = () => gravarParcial();
+  const handleOnclickNext = () => {
+    gravarParcial();
+    history.push(`/home/diarista/cadastrodadospessoais/${match.params.id}`);
+  };
 
   const gravarParcial = () => {
     let diaristaCadastro: DiaristaCadastro = {
@@ -42,7 +46,7 @@ const CadastroComoFuncionaPage: React.FC<DiaristaDetalhesPageProps> = ({
       id: match.params.id
     };
 
-    DiaristasService.save(diaristaCadastro);
+    DiaristasService.saveLocal(diaristaCadastro);
   };
 
   return (
@@ -61,7 +65,6 @@ const CadastroComoFuncionaPage: React.FC<DiaristaDetalhesPageProps> = ({
           <IonButtons slot="end" color="secundary">
             <IonButton
               routerDirection="forward"
-              routerLink="/home/diarista/cadastrodadospessoais"
               disabled={!trabalho}
               onClick={e => {
                 handleOnclickNext();

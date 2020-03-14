@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
           <img src="/assets/Logo.png" alt="logo" style={{ height: 100 }} />
           <IonCardHeader>
             <IonCardSubtitle>
-              &copy;LimpeAqui - (Londrina - PR - Brasil{" "}
+              &copy;LimpeAqui - (Londrina - PR - Br)
             </IonCardSubtitle>
           </IonCardHeader>
         </IonCard>
