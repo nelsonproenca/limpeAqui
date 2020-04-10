@@ -1,5 +1,5 @@
 class PedidosService {
-  static loadLocal() {
+  static loadLocal(tabela) {
     return new Promise((resolve, reject) => {
       debugger;
       try {
@@ -12,32 +12,44 @@ class PedidosService {
     });
   }
 
-  static saveLocal(pedido) {
+  static getBemVindoLocal(contratanteId) {
     return new Promise((resolve, reject) => {
       try {
-        window.localStorage.setItem("Pedidos", JSON.stringify(pedido));
-        resolve("Informações adicionadas com sucesso");
+        const pedidos = window.localStorage.getItem("Pedidos");
+        let pedidoAtual = pedidos ? JSON.parse(pedidos) : [];
+
+        let bemVindo = {
+          diaristaId: "add0e7f1-0000-0000-0000-2d5264419999",
+          diaristaNome: "Diarista Teste",
+          contratanteId: "add0e7f1-ea0b-48e6-af85-2d5264415a7f",
+          contratanteNome: "Admin Contratante",
+          foto: "",
+          dataServico: "12/01/2020 09:30",
+          valorServico: "0.00"
+        };
+
+        resolve(bemVindo);
       } catch (error) {
         reject(error);
       }
     });
   }
 
-  static getLocal(pedidoId) {
+  static saveLocal(pedido) {
     return new Promise((resolve, reject) => {
       try {
-        const pedidosData = window.localStorage.getItem("Pedidos");
+        debugger;
+        let pedidosData = window.localStorage.getItem("Pedidos");
 
-        let pedidos = pedidosData ? JSON.parse(pedidosData) : [];
-        let pedido = null;
-
-        if (Array(pedidos).length > 0) {
-          pedido = Array(pedidos).map(result => {
-            return result.id === pedidoId ? result : null;
-          });
+        if (pedidosData === null) {
+          pedidosData = [pedido];
+        } else {
+          pedidosData = JSON.parse(pedidosData);
+          pedidosData.push(pedido);
         }
 
-        resolve(pedido);
+        window.localStorage.setItem("Pedidos", JSON.stringify(pedidosData));
+        resolve("Informações adicionadas com sucesso");
       } catch (error) {
         reject(error);
       }

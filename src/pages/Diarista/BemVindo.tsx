@@ -43,7 +43,7 @@ const BemVindoDiaristaPage: React.FC<DiaristaDetalhesPageProps> = ({
     }
 
     carregarDados(match.params.Id);
-  }, []);
+  }, [match.params.Id]);
 
   const urlFoto =
     "https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y";
@@ -70,10 +70,7 @@ const BemVindoDiaristaPage: React.FC<DiaristaDetalhesPageProps> = ({
         >
           <IonItem lines="none">
             <IonAvatar slot="start" style={{ width: 64, height: 64 }}>
-              <img
-                alt="foto"
-                src={diarista?.foto.length === 0 ? urlFoto : diarista?.foto}
-              />
+              <img alt="foto" src={diarista?.foto} />
             </IonAvatar>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <IonLabel style={{ marginBottom: "7px" }}>

@@ -15,7 +15,8 @@ import {
   IonItem,
   IonInput,
   IonCardTitle,
-  IonAlert
+  IonAlert,
+  IonText
 } from "@ionic/react";
 import { logIn, document, save, arrowBack } from "ionicons/icons";
 import React, { useState } from "react";
@@ -29,7 +30,7 @@ interface LoginPageProps
     id: string;
   }> {}
 
-const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
+const RegistroPage: React.FC<LoginPageProps> = ({ match, history }) => {
   const [usuario, setUsuario] = useState("");
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
@@ -59,6 +60,8 @@ const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
   };
 
   const handleSalvarClick = () => {
+    console.log("match.params.id", match.params.id);
+
     let novoUsuario: RegistroUsuario = {
       usuario,
       senha,
@@ -87,12 +90,16 @@ const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
     setCelular("");
   };
 
+  const handleClickBack = () => {
+    history.push(`/home/login/${match.params.id}`);
+  }
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton routerLink="/home/login" routerDirection="back">
+            <IonButton onClick={handleClickBack} routerDirection="back">
               <IonIcon icon={arrowBack}></IonIcon>
             </IonButton>
           </IonButtons>
@@ -122,7 +129,9 @@ const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
           </IonCardHeader>
           <IonList lines="none">
             <IonItem>
-              <IonLabel position="stacked">Usuário:</IonLabel>
+              <IonLabel position="stacked">
+                Usuário: <IonText color="danger">*</IonText>
+              </IonLabel>
               <IonInput
                 type="text"
                 value={usuario}
@@ -131,7 +140,9 @@ const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
               ></IonInput>
             </IonItem>
             <IonItem>
-              <IonLabel position="stacked">Senha:</IonLabel>
+              <IonLabel position="stacked">
+                Senha: <IonText color="danger">*</IonText>
+              </IonLabel>
               <IonInput
                 type="password"
                 value={senha}
@@ -154,7 +165,9 @@ const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
           </IonCardHeader>
           <IonList lines="none">
             <IonItem>
-              <IonLabel position="stacked">Nome:</IonLabel>
+              <IonLabel position="stacked">
+                Nome: <IonText color="danger">*</IonText>
+              </IonLabel>
               <IonInput
                 type="text"
                 value={nome}
@@ -163,7 +176,9 @@ const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
               ></IonInput>
             </IonItem>
             <IonItem>
-              <IonLabel position="stacked">E-mail:</IonLabel>
+              <IonLabel position="stacked">
+                E-mail: <IonText color="danger">*</IonText>
+              </IonLabel>
               <IonInput
                 type="email"
                 value={email}
@@ -172,7 +187,9 @@ const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
               ></IonInput>
             </IonItem>
             <IonItem>
-              <IonLabel position="stacked">Celular:</IonLabel>
+              <IonLabel position="stacked">
+                Celular: <IonText color="danger">*</IonText>
+              </IonLabel>
               <IonInput
                 type="tel"
                 value={celular}
@@ -192,6 +209,13 @@ const RegistroPage: React.FC<LoginPageProps> = ({ match }) => {
             onClick={() => {
               handleSalvarClick();
             }}
+            disabled={
+              usuario === "" ||
+              senha === "" ||
+              nome === "" ||
+              email === "" ||
+              celular === ""
+            }
           >
             <IonIcon icon={save} slot="end"></IonIcon>
             <IonLabel style={{ fontSize: "1rem" }}>Salvar</IonLabel>

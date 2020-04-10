@@ -16,9 +16,7 @@ import {
   IonButton,
   IonItem,
   IonInput,
-  IonAlert,
-  IonCardTitle,
-  IonCardContent
+  IonAlert
 } from "@ionic/react";
 import { logoFacebook, logoGoogle, logIn } from "ionicons/icons";
 import React, { useState } from "react";
@@ -28,7 +26,7 @@ import { RegistroUsuario } from "../interfaces/RegistroUsuario";
 
 interface LoginPageProps
   extends RouteComponentProps<{
-    tipo: string;
+    id: string;
   }> {}
 
 const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
@@ -52,14 +50,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
     let usuarios: RegistroUsuario[] = [];
 
     UsuariosService.load().then(result => {
-      debugger;
       usuarios = result;
       if (usuarios.length > 0) {
         usuarios.map((user, index) => {
           if (user.usuario === login && user.senha === senha) {
             if (user.tipo === 1) {
               history.push(`/home/diarista/bemvindo/${user.id}`);
-            } else if (usuario.tipo === 2) {
+            } else if (user.tipo === 2) {
               history.push(`/home/contratante/bemvindo/${user.id}`);
             }
           }
@@ -71,10 +68,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
     });
   };
 
-  const [usuario, setUsuario] = useState();
-  const [senha, setSenha] = useState();
+  const [usuario, setUsuario] = useState("");
+  const [senha, setSenha] = useState("");
   const [erro, setErro] = useState(false);
-  const [mensagemErro, setMensagemErro] = useState();
+  const [mensagemErro, setMensagemErro] = useState("");
+
+  const handleUsuarioChange = (e: CustomEvent) => setUsuario(e.detail.value);
+  const handleSenhaChange = (e: CustomEvent) => setSenha(e.detail.value);
 
   return (
     <IonPage>
@@ -105,9 +105,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
                 type="text"
                 placeholder="Entre com seu usuário."
                 value={usuario}
-                onIonChange={e => {
-                  setUsuario(e.detail.value);
-                }}
+                onIonChange={handleUsuarioChange}
               ></IonInput>
             </IonItem>
             <IonItem>
@@ -116,9 +114,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
                 type="password"
                 placeholder="Entre com sua senha."
                 value={senha}
-                onIonChange={e => {
-                  setSenha(e.detail.value);
-                }}
+                onIonChange={handleSenhaChange}
               ></IonInput>
             </IonItem>
             <IonItem>
@@ -127,6 +123,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
                 color="warning"
                 expand="block"
                 style={{ fontSize: "1.3rem", width: "100%", height: 50 }}
+                disabled={senha === "" || usuario === ""}
                 onClick={() => {
                   handleEntrarClick(usuario, senha);
                 }}
@@ -141,7 +138,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ match, history }) => {
                 size="small"
                 color="light"
                 routerDirection="back"
-                routerLink={`/home/registro/${match.params.tipo}`}
+                routerLink={`/home/registro/${match.params.id}`}
               >
                 <IonLabel>Registre-se</IonLabel>
               </IonButton>

@@ -74,7 +74,7 @@ const PedidoObservacoesPage: React.FC = () => {
                   <IonRadio
                     slot="start"
                     value={iten.id.toString()}
-                    checked={iten.isChecked}
+                    defaultChecked={iten.isChecked}
                   />
                 </IonItem>
               ))}

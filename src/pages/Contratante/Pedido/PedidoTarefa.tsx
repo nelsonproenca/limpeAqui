@@ -16,21 +16,17 @@ import {
 } from "@ionic/react";
 import { arrowBack, arrowForward } from "ionicons/icons";
 import React, { useState } from "react";
+import { RouteComponentProps } from "react-router";
 
-const PedidoTarefaPage: React.FC = () => {
-  const tarefas = [
-    { val: "Limpar o quarto", time: "60", isChecked: false },
-    { val: "Limpar a cozinha", time: "60", isChecked: false },
-    { val: "Lavar louça", time: "60", isChecked: false },
-    { val: "Limpar o banheiro", time: "60", isChecked: false },
-    { val: "Limpar as janelas", time: "60", isChecked: false },
-    { val: "Lavar Roupas", time: "60", isChecked: false }
-  ];
+interface PedidosPageProps
+  extends RouteComponentProps<{ idPedido: string; tipoServico: string }> {}
 
+const PedidoTarefaPage: React.FC<PedidosPageProps> = ({ match, history }) => {
   const [total, setTotal] = useState(0);
   const [horas, setHoras] = useState(0);
 
   const handleOnChange = (e: CustomEvent) => {
+    debugger;
     let parcial = 0;
 
     if (e.detail.checked) {
@@ -57,7 +53,7 @@ const PedidoTarefaPage: React.FC = () => {
         <IonToolbar>
           <IonButtons slot="start">
             <IonButton
-              routerLink="/home/contratante/pedidoservico"
+              routerLink={`/home/contratante/pedidoservico/${match.params.idPedido}`}
               routerDirection="back"
             >
               <IonIcon icon={arrowBack}></IonIcon>
@@ -86,27 +82,57 @@ const PedidoTarefaPage: React.FC = () => {
           <IonList>
             <IonItem>
               <IonLabel>Limpar o quarto</IonLabel>
-              <IonCheckbox slot="start" value="60" checked={false} />
+              <IonCheckbox
+                slot="start"
+                value="60"
+                checked={false}
+                onIonChange={handleOnChange}
+              />
             </IonItem>
             <IonItem>
               <IonLabel>Limpar a cozinha</IonLabel>
-              <IonCheckbox slot="start" value="60" checked={false} />
+              <IonCheckbox
+                slot="start"
+                value="60"
+                checked={false}
+                onIonChange={handleOnChange}
+              />
             </IonItem>
             <IonItem>
               <IonLabel>Lavar louça</IonLabel>
-              <IonCheckbox slot="start" value="60" checked={false} />
+              <IonCheckbox
+                slot="start"
+                value="60"
+                checked={false}
+                onIonChange={handleOnChange}
+              />
             </IonItem>
             <IonItem>
               <IonLabel>Limpar o banheiro</IonLabel>
-              <IonCheckbox slot="start" value="60" checked={false} />
+              <IonCheckbox
+                slot="start"
+                value="60"
+                checked={false}
+                onIonChange={handleOnChange}
+              />
             </IonItem>
             <IonItem>
               <IonLabel>Limpar as janelas</IonLabel>
-              <IonCheckbox slot="start" value="60" checked={false} />
+              <IonCheckbox
+                slot="start"
+                value="60"
+                checked={false}
+                onIonChange={handleOnChange}
+              />
             </IonItem>
             <IonItem lines="none">
               <IonLabel>Lavar Roupas</IonLabel>
-              <IonCheckbox slot="start" value="60" checked={false} />
+              <IonCheckbox
+                slot="start"
+                value="60"
+                checked={false}
+                onIonChange={handleOnChange}
+              />
             </IonItem>
           </IonList>
         </IonCard>

@@ -14,9 +14,23 @@ import {
   IonAvatar
 } from "@ionic/react";
 import { personAdd, home, document, chatbubbles } from "ionicons/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { RouteComponentProps } from "react-router";
+import PedidosService from "../../services/PedidosService";
+import { BemVindo } from "../../interfaces/BemVindo";
 
-const BemVindoPage: React.FC = () => {
+interface PedidoPageProps extends RouteComponentProps<{ id: string }> {}
+
+const BemVindoPage: React.FC<PedidoPageProps> = ({ match, history }) => {
+  const [contratanteId, setContratanteId] = useState<string>(match.params.id);
+  const [benVindo, setBenVindo] = useState<BemVindo>({});
+
+  useEffect(() => {
+    PedidosService.getBemVindoLocal(contratanteId).then(result => {
+      setBenVindo(result);
+    });
+  }, [contratanteId]);
+
   return (
     <IonPage>
       <IonHeader>
@@ -37,23 +51,27 @@ const BemVindoPage: React.FC = () => {
         >
           <IonItem lines="none">
             <IonAvatar slot="start" style={{ width: 64, height: 64 }}>
-              <img
-                alt="foto"
-                src="https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y"
-              />
+              <img alt="foto" src={benVindo.foto} />
             </IonAvatar>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <IonLabel style={{ marginBottom: "7px" }}>
-                <h1>Olá, Usuário !!!</h1>
+                <h1 style={{ fontSize: "1.15rem", fontWeight: "bold" }}>
+                  Olá, {benVindo.contratanteNome} !!!
+                </h1>
               </IonLabel>
               <IonLabel style={{ marginBottom: "5px" }}>
-                <h4>Ultimo pedido em 99/99/9999</h4>
+                <h4>
+                  Ultimo pedido em
+                  <span style={{ fontSize: "0.80rem" }}>
+                    {" " + benVindo.dataServico}
+                  </span>
+                </h4>
               </IonLabel>
               <IonLabel style={{ marginBottom: "5px" }}>
-                <h4>Diarista: Maria da Silva</h4>
+                <h4>Diarista: {benVindo.diaristaNome}</h4>
               </IonLabel>
               <IonLabel style={{ marginBottom: "px" }}>
-                <h4>Valor: 999,99</h4>
+                <h4>Valor: {benVindo.valorServico}</h4>
               </IonLabel>
             </div>
           </IonItem>
@@ -66,7 +84,7 @@ const BemVindoPage: React.FC = () => {
             expand="block"
             fill="outline"
             style={{ fontSize: "1.3rem", width: "100%", height: 70 }}
-            routerLink="/home/contratante/pedidomapa"
+            routerLink={`/home/contratante/pedidomapa/${match.params.id}`}
             routerDirection="forward"
           >
             <IonIcon

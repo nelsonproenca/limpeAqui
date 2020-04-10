@@ -62,8 +62,7 @@ dotenv.config();
 const appPages: AppPage[] = [
   {
     title: "Home",
-    url: "/home",
-    icon: home
+    url: "/home"
   }
 ];
 
@@ -98,37 +97,37 @@ const App: React.FC = () => (
             exact={true}
           />
           <Route
-            path="/home/contratante/pedidomapa"
+            path="/home/contratante/pedidomapa/:idContratante"
             component={PedidoMapaPage}
             exact={true}
           />
           <Route
-            path="/home/contratante/pedidodata"
+            path="/home/contratante/pedidodata/:idPedido"
             component={PedidoDataPage}
             exact={true}
           />
           <Route
-            path="/home/contratante/pedidoservico"
+            path="/home/contratante/pedidoservico/:idPedido/:tipoServico"
             component={PedidoServicoPage}
             exact={true}
           />
           <Route
-            path="/home/contratante/pedidotarefa"
+            path="/home/contratante/pedidotarefa/:idPedido"
             component={PedidoTarefaPage}
             exact={true}
           />
           <Route
-            path="/home/contratante/pedidoobservacoes"
+            path="/home/contratante/pedidoobservacoes/:idPedido"
             component={PedidoObservacoesPage}
             exact={true}
           />
           <Route
-            path="/home/contratante/pedidoresumo"
+            path="/home/contratante/pedidoresumo/:idPedido"
             component={PedidoResumoPage}
             exact={true}
           />
           <Route
-            path="/home/contratante/pedidopagamento"
+            path="/home/contratante/pedidopagamento/:idPedido"
             component={PedidoPagamentoPage}
             exact={true}
           />

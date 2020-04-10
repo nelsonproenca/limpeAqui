@@ -13,19 +13,18 @@ import {
   IonDatetime,
   IonInput
 } from "@ionic/react";
-import { arrowBack, arrowForward } from "ionicons/icons";
+import { arrowBack, arrowForward, home } from "ionicons/icons";
 import React, { useState } from "react";
 import { RouteComponentProps } from "react-router";
+import { Pedido } from "../../../interfaces/Pedido";
+import PedidosService from "../../../services/PedidosService";
 
 interface PedidosPageProps
   extends RouteComponentProps<{
-    id: string;
+    idPedido: string;
   }> {}
 
 const PedidoDataPage: React.FC<PedidosPageProps> = ({ match, history }) => {
-  const [dia, setDia] = useState(0);
-  const [mes, setMes] = useState("");
-  const [ano, setAno] = useState(0);
   const meses = [
     "janeiro",
     "fevereiro",
@@ -41,8 +40,36 @@ const PedidoDataPage: React.FC<PedidosPageProps> = ({ match, history }) => {
     "dezembro"
   ];
 
+  const [dia, setDia] = useState(0);
+  const [mes, setMes] = useState(0);
+  const [ano, setAno] = useState(0);
+  const [hora, setHora] = useState<string>("00:00");
+  const [nomeMes, setNomeMes] = useState("");
+
   const handleClickNext = () => {
-    history.push("/home/contratante/pedidoservico");
+    gravarParcial();
+    history.push(`/home/contratante/pedidoservico/${match.params.idPedido}`);
+  };
+
+  const handleClickBack = () => {
+    history.push(`/home/contratante/pedidomapa/${match.params.idPedido}`);
+  };
+
+  const handleChangeHora = (e: CustomEvent) => setHora(e.detail.value);
+
+  const gravarParcial = () => {
+    debugger;
+
+    let dataServico = `${ano}-${mes}-${dia}`;
+
+    let pedido: Pedido = {
+      id: match.params.idPedido,
+      dataServico,
+      horaServico: hora,
+      diaSemanaServico: new Date(dataServico).getDay().toString()
+    };
+
+    PedidosService.saveLocal(pedido);
   };
 
   return (
@@ -50,10 +77,7 @@ const PedidoDataPage: React.FC<PedidosPageProps> = ({ match, history }) => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton
-              routerLink="/home/contratante/pedidomapa"
-              routerDirection="back"
-            >
+            <IonButton onClick={handleClickBack} routerDirection="back">
               <IonIcon icon={arrowBack}></IonIcon>
             </IonButton>
           </IonButtons>
@@ -73,25 +97,20 @@ const PedidoDataPage: React.FC<PedidosPageProps> = ({ match, history }) => {
             class="ion-padding"
             style={{ textAlign: "center" }}
           >
-            <IonLabel
-              class="ion-text-wrap"
-              position="stacked"
-              style={{ fontSize: "1.2rem" }}
-            >
-              Selecione a data do serviço.
-            </IonLabel>
             <IonDatetime
               pickerOptions={{
                 buttons: [
                   {
                     text: "Selecionar",
-                    handler: ({ day, month, year }) => {
-                      let mes = month.value;
+                    handler: e => {
+                      console.log(e);
+                      let mes = e.month.value;
                       let nomeMes = meses[mes - 1 < 0 ? 0 : mes - 1];
 
-                      setAno(year.value);
-                      setMes(nomeMes);
-                      setDia(day.value);
+                      setNomeMes(nomeMes);
+                      setAno(e.year.value);
+                      setMes(e.month.value);
+                      setDia(e.day.value);
                     }
                   },
                   {
@@ -104,13 +123,14 @@ const PedidoDataPage: React.FC<PedidosPageProps> = ({ match, history }) => {
                 ]
               }}
               displayFormat="DD/MM/YYYY"
+              min="2020-03-01"
               placeholder="Escolha a data do serviço."
             ></IonDatetime>
           </IonItem>
           <IonCard style={{ height: 50, textAlign: "center" }}>
             <IonItem lines="none" style={{ textAlign: "center" }}>
               <IonLabel style={{ fontSize: "1rem" }}>
-                {mes.length === 0 ? "" : mes + "/" + ano}.
+                {nomeMes.length === 0 ? "" : nomeMes + "/" + ano}.
               </IonLabel>
             </IonItem>
           </IonCard>
@@ -124,7 +144,12 @@ const PedidoDataPage: React.FC<PedidosPageProps> = ({ match, history }) => {
               <IonLabel>A partir das </IonLabel>
             </IonItem>
             <IonItem lines="none" style={{ textAlign: "center" }}>
-              <IonInput type="time" style={{ fontSize: "3rem" }} />
+              <IonInput
+                type="time"
+                value={hora}
+                style={{ fontSize: "3rem" }}
+                onIonChange={handleChangeHora}
+              />
             </IonItem>
           </IonCard>
         </IonCard>

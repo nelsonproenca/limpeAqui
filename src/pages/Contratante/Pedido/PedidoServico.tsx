@@ -14,17 +14,39 @@ import {
 } from "@ionic/react";
 import { arrowBack, home, business, shirt, star } from "ionicons/icons";
 import React from "react";
+import { RouteComponentProps } from "react-router";
+import { Pedido } from "../../../interfaces/Pedido";
+import PedidosService from "../../../services/PedidosService";
 
-const PedidoServicoPage: React.FC = () => {
+interface PedidosPageProps extends RouteComponentProps<{ idPedido: string }> {}
+
+const PedidoServicoPage: React.FC<PedidosPageProps> = ({ match, history }) => {
+  const handleClickNext = (tipoServico: string) => {
+    gravarParcial(tipoServico);
+    history.push(
+      `/home/contratante/pedidotarefa/${match.params.idPedido}/${tipoServico}`
+    );
+  };
+
+  const handleClickBack = () => {
+    history.push(`/home/contratante/pedidodata/${match.params.idPedido}`);
+  };
+
+  const gravarParcial = (tipoServico: string) => {
+    let pedido: Pedido = {
+      id: match.params.idPedido,
+      tipoServico
+    };
+
+    PedidosService.saveLocal(pedido);
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonButton
-              routerLink="/home/contratante/pedidodata"
-              routerDirection="back"
-            >
+            <IonButton onClick={handleClickBack} routerDirection="back">
               <IonIcon icon={arrowBack}></IonIcon>
             </IonButton>
           </IonButtons>
@@ -52,7 +74,9 @@ const PedidoServicoPage: React.FC = () => {
             color="warning"
             expand="block"
             style={{ width: "100%", height: 100 }}
-            routerLink="/home/contratante/pedidotarefa"
+            onClick={() => {
+              handleClickNext("1");
+            }}
             routerDirection="forward"
           >
             <IonIcon
@@ -71,7 +95,9 @@ const PedidoServicoPage: React.FC = () => {
             color="warning"
             expand="block"
             style={{ fontSize: "2rem", width: "100%", height: 100 }}
-            routerLink="/home/contratante/pedidotarefa"
+            onClick={() => {
+              handleClickNext("2");
+            }}
             routerDirection="forward"
           >
             <IonIcon
@@ -90,7 +116,9 @@ const PedidoServicoPage: React.FC = () => {
             color="warning"
             expand="block"
             style={{ width: "100%", height: 100 }}
-            routerLink="/home/contratante/pedidotarefa"
+            onClick={() => {
+              handleClickNext("3");
+            }}
             routerDirection="forward"
           >
             <IonIcon
@@ -109,7 +137,9 @@ const PedidoServicoPage: React.FC = () => {
             color="warning"
             expand="block"
             style={{ width: "100%", height: 100 }}
-            routerLink="/home/contratante/pedidotarefa"
+            onClick={() => {
+              handleClickNext("4");
+            }}
             routerDirection="forward"
           >
             <IonIcon
